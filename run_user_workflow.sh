@@ -70,6 +70,10 @@ then
 	cookie_name=session_id-Calpendo
 fi
 
+# If you're using an Exprodo Database instead of Calpendo, then the cookie
+# name can have a space in it. In that case, it must be URL-encoded.
+cookie_name=$(echo "$cookie_name" | sed 's/ /%20/g')
+
 cat << RUN_WORKFLOW_REQUEST > request.json
 {
         "sessionID": "$session_id",
