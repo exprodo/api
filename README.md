@@ -104,6 +104,24 @@ To be able to make sense of big JSON files, I recommend:
 * https://www.geany.org/ - for a GUI text editor that can read/write JSON
   files
 
+# Obtaining Cookie Name
+
+Version 11.0 of Exprodo databases use a different name for the cookie it
+uses to store the user's session ID. There's a script that will calculate
+this for you:
+
+    get_cookie_name.sh -l http://yourcalpendo/
+
+If you use scripts that connect using the internal API, then you will need
+to know the cookie name. Note that the cookie name is stable and will
+rarely change in the lifetime of your database (although it did change for
+version 11.0).
+
+The script run_user_workflow.sh can be given the cookie name, and will
+calculate it if you don't provide it. This means it serves as an example
+of how to calculate it, although you may wish to hard-code it once you
+work out what it is, since it is stable.
+
 # Get Bookings
 
 You can get bookings in various ways. You can do so with the REST API, but
