@@ -190,6 +190,53 @@ REST API or the query API where possible. However, talk to us about what
 you're trying to achieve, and we may be able to help you use the general
 client API.
 
+# Dump Database
+
+You can ask the server to dump its database, and then download the dump file.
+This is the same thing the standard web client does on its "Dump database"
+page, and the script dump_database.sh shows how to do it:
+
+    dump_database.sh -s SESSION_ID -l https://yourcalpendo/
+
+This happens in two steps:
+
+1. The script sends a DatabaseDumpRequest to the "databaseDump" API call. The
+   server writes the dump to a temporary file, and then replies with a
+   DatabaseDumpResponse that contains a URL for that file. The URL is
+   relative, and looks like "downloads?type=tempfile&key=...".
+2. The script downloads the file from that URL. Note that "downloads" sits
+   alongside "api" rather than under it, so if your link is
+   https://yourcalpendo/api/ then the download comes from
+   https://yourcalpendo/downloads?type=tempfile&key=...
+
+By default, the dump is gzip-compressed and includes all tables, with both
+their structure and their data. The file is saved under the name the server
+gives it, which looks something like
+database.Calpendo.yourcalpendo.v11.0.0.2025-01-31.12-00.sql.gz
+
+You can see the full options available with this script by running:
+
+    dump_database.sh -h
+
+These options let you choose an uncompressed dump, a dump of the structure
+only, or a dump that leaves out the data in the history and statistics
+tables and the attachment content. The history, statistics and attachment
+tables can be very large.
+
+There are some things to be aware of:
+
+* The user must have permission to dump the database, and must be able to
+  read everything in the database.
+* Your system licence must allow database dumps.
+* The server will refuse a dump if it is too soon after the last one.
+* The download must use the same session as the dump request. After 30
+  seconds, it must also come from the same IP address as the dump request.
+* On a large database, it can take some time for the server to write the
+  dump before it replies to the first request.
+
+If the server refuses the request, the script prints the server's error
+message, which you can also see in response.json.
+
 # Further Calls
 
 If you want to create a booking, then the REST API or query API won't help you
