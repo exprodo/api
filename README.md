@@ -46,7 +46,7 @@ For this to work, you first need to identify the id number (primary key) of the
 authentication method you want to use. You can either work it out using the
 web UI, or you can do so using the read-only API like this:
 
-    wget -quiet -O - --user=USER --password=PASSWORD 'https://yourcalpendo/webdav/b/AuthenticationMethod'
+    wget --quiet -O - --user=USER --password=PASSWORD 'https://yourcalpendo/webdav/b/AuthenticationMethod'
 
 where you should replace the "https://yourcalpendo/" with the URL for your
 Calpendo, and replace USER and PASSWORD with your username and password.
@@ -57,7 +57,7 @@ single-sign-on method like Shibboleth).
 If you're looking specifically for the local authentication method, then you
 can go directly to it with a query API call like this:
 
-    wget -quiet -O - --user=USER --password=PASSWORD 'https://yourcalpendo/webdav/q/AuthenticationMethod/biskitType/eq/LocalAuthenticationMethod?paths=id'
+    wget --quiet -O - --user=USER --password=PASSWORD 'https://yourcalpendo/webdav/q/AuthenticationMethod/biskitType/eq/LocalAuthenticationMethod?paths=id'
 
 Once you've identified the id number of the authentication method, you can
 then use it to allow you to use the general client API rather than the
@@ -129,7 +129,7 @@ it can only be used to return a single booking or all bookings. There are
 likely to be too many for this, so you can instead use the query API to pick
 just those bookings you want. For example:
 
-    wget -quiet -O - --user=USER --password=PASSWORD 'https://yourcalpendo/webdav/q/Calpendo.Booking/dateRange.start.date/eq/20210906'
+    wget --quiet -O - --user=USER --password=PASSWORD 'https://yourcalpendo/webdav/q/Calpendo.Booking/dateRange.start.date/eq/20210906'
 
 If you want to use the general client API though, you can use the same method
 the standard Calpendo client uses. This has been exemplified with the script 
