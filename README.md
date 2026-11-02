@@ -76,9 +76,38 @@ authentication method. That is, if it's an authentication method for which
 Calpendo does not normally handle the password at all (for example when
 you're using single-sign-on, like Shibboleth), then login.sh would not work.
 
-If login.sh works, then it will output the session ID. If it doesn't work, you
-might need to remove the "--quiet" option from wget in login.sh to see what
-the error was.
+If login.sh works, then it will output the session ID. If it doesn't work, it
+will print the reason. If that's not enough, you might need to remove the
+"--quiet" option from wget in login.sh to see what the error was.
+
+## Two Factor Authentication
+
+If the user has two factor authentication (2FA) turned on, then the session
+you get from logging in cannot be used until it has been validated with the
+current code from the user's authenticator app. Until then, the server will
+refuse any other request that uses the session.
+
+login.sh does this for you. Either give it the code with the -t option:
+
+    login.sh -a AUTH_METHOD_ID -u USER -p PASSWORD -l http://yourcalpendo/ -t 123456
+
+or leave out -t, and it will ask you to type in the code if it needs one.
+If you're running it from another script, with no terminal to type in, then
+you must use -t.
+
+This happens in two steps:
+
+1. The login response says whether 2FA is needed ("twofa") and contains a
+   token ("twoFAToken").
+2. login.sh sends a ValidateTwoFASessionRequest to the "validateTwoFASession"
+   API call. This contains the code and the token, and uses the session
+   cookie. The response says whether the code was accepted ("valid"). Note
+   that the token is only valid for a short time.
+
+Since the code changes every 30 seconds, 2FA cannot be fully automated
+unless your script can generate the code itself. It is usually better to
+use an account that doesn't need 2FA for unattended scripts, and to keep its
+permissions to the minimum the script needs.
 
 # Run User Workflow
 
